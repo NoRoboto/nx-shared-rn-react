@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
 import { AppService } from './app.service';
 
@@ -7,7 +7,17 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getData() {
-    return this.appService.getData();
+  getTask() {
+    return this.appService.getTasks();
+  }
+
+  @Post()
+  createTask(@Body() payload: { text: string }) {
+    return this.appService.addTask(payload.text);
+  }
+
+  @Post()
+  removeTask(@Body() payload: { id: number }) {
+    return this.appService.removeTask(payload.id);
   }
 }
