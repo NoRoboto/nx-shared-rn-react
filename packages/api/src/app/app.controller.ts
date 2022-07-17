@@ -16,7 +16,7 @@ export class AppController {
     return this.appService.addTask(payload.text);
   }
 
-  @Post()
+  @Post('removeTask')
   removeTask(@Body() payload: { id: number }) {
     return this.appService.removeTask(payload.id);
   }

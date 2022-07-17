@@ -1,51 +1,53 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
-import NxWelcome from './nx-welcome';
-
-import { Route, Routes, Link } from 'react-router-dom';
+import { Tasks } from '@nx-react-shared-components/shared-types';
+import axios from 'axios';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 export function App() {
+  const textInputRef = useRef<HTMLInputElement>(null);
+  const [tasks, setTasks] = useState<Tasks[]>([]);
+
+  const getTasks = useCallback(async () => {
+    const resp = await axios.get<Tasks[]>('http://localhost:3333/api');
+    setTasks(resp.data);
+  }, []);
+
+  useEffect(() => {
+    getTasks();
+  }, [getTasks]);
+
+  const onAddTask = useCallback(async () => {
+    if (!textInputRef.current) return;
+    await axios.post('http://localhost:3333/api', {
+      text: textInputRef.current?.value
+    });
+
+    textInputRef.current.value = '';
+    getTasks();
+  }, [getTasks]);
+
+  const onRemoveTask = useCallback(async (id: number) => {
+    await axios.post('http://localhost:3333/api/removeTask', {
+      id,
+    });
+    
+    getTasks();
+  }, [getTasks]);
+
   return (
     <>
-      <NxWelcome title="webapp" />
-      <div />
-
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
+      <h1>My tasks</h1>
+      <ul>
+        {
+          tasks.map(task => <li key={task.id}>
+            {task.text}
+            <button onClick={() => onRemoveTask(task.id)} >Remove</button>
+          </li>)
+        }
+      </ul>
+      <div>
+        <input ref={textInputRef} />
+        <button onClick={onAddTask}>Add</button>
       </div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
-      </Routes>
-      {/* END: routes */}
     </>
   );
 }

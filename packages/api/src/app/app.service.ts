@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-
-interface Tasks {
-  id: number;
-  text: string;
-}
+import { Tasks } from '@nx-react-shared-components/shared-types';
 
 @Injectable()
 export class AppService {

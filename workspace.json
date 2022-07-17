@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "api": "packages/api",
+    "shared-types": "packages/shared-types",
     "webapp": "packages/webapp",
     "webapp-e2e": "packages/webapp-e2e"
   }
