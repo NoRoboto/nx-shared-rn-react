@@ -1,37 +1,16 @@
-import { Tasks } from '@nx-react-shared-components/shared-types';
-import axios from 'axios';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useTasks } from '@nx-react-shared-components/data-access';
+import { useCallback, useRef } from 'react';
 
 export function App() {
   const textInputRef = useRef<HTMLInputElement>(null);
-  const [tasks, setTasks] = useState<Tasks[]>([]);
-
-  const getTasks = useCallback(async () => {
-    const resp = await axios.get<Tasks[]>('http://localhost:3333/api');
-    setTasks(resp.data);
-  }, []);
-
-  useEffect(() => {
-    getTasks();
-  }, [getTasks]);
+  const { addTask, removeTask, tasks, getTasks } =  useTasks();
 
   const onAddTask = useCallback(async () => {
     if (!textInputRef.current) return;
-    await axios.post('http://localhost:3333/api', {
-      text: textInputRef.current?.value
-    });
 
+    await addTask(textInputRef.current.value);
     textInputRef.current.value = '';
-    getTasks();
-  }, [getTasks]);
-
-  const onRemoveTask = useCallback(async (id: number) => {
-    await axios.post('http://localhost:3333/api/removeTask', {
-      id,
-    });
-    
-    getTasks();
-  }, [getTasks]);
+  }, [addTask]);
 
   return (
     <>
@@ -40,7 +19,7 @@ export function App() {
         {
           tasks.map(task => <li key={task.id}>
             {task.text}
-            <button onClick={() => onRemoveTask(task.id)} >Remove</button>
+            <button onClick={() => removeTask(task.id)} >Remove</button>
           </li>)
         }
       </ul>

@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "api": "packages/api",
+    "data-access": "packages/data-access",
     "mobile": "packages/mobile",
     "mobile-e2e": "packages/mobile-e2e",
     "shared-types": "packages/shared-types",

@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@nx-react-shared-components/data-access": [
+        "packages/data-access/src/index.ts"
+      ],
       "@nx-react-shared-components/shared-types": [
         "packages/shared-types/src/index.ts"
       ]
